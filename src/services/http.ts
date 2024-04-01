@@ -1,7 +1,7 @@
 import axios, { Axios, AxiosDefaults, AxiosHeaderValue, AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults } from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://money.vvvtech.online/api";
-const REFRESH_TIMEOUT = 150000; // 25min
+const REFRESH_TIMEOUT = 1500000; // 25min
 
 let refreshPromise: Promise<boolean> | null;
 interface HTTPInstance extends Axios {
@@ -74,7 +74,7 @@ httpService.interceptors.response.use(
         });
       }
 
-      refreshPromise.then((hasCredential) => {
+      return refreshPromise.then((hasCredential) => {
         if (hasCredential) {
           return httpService.request(originalConfig);
         } else {

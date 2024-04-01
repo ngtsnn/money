@@ -1,3 +1,4 @@
+import { endOfMonth } from "date-fns/endOfMonth";
 import { startOfMonth } from "date-fns/startOfMonth";
 import httpService from "services/http";
 import useSWR from "swr";
@@ -9,10 +10,12 @@ export const useMonthlyExpense = () => {
     async () => {
       const now = Date.now();
       const monthFirst = startOfMonth(now);
+      const monthLast = endOfMonth(now);
       const budgets = await httpService.get("/expense", {
         params: {
           from: monthFirst.getTime(),
-        }
+          to: monthLast.getTime(),
+        },
       });
       return budgets as Expense[];
     },

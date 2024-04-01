@@ -141,7 +141,7 @@ const Home: FC = () => {
           <Card className="shadow-md">
             {budgets?.map((b) => {
               return (
-                <div className="w-full flex items-center justify-between">
+                <div key={b.id} className="w-full flex items-center justify-between">
                   <span className="text-sm md:text-lg font-semibold">{b.category}</span>
                   <span className="text-sm md:text-lg font-semibold">{vndFormat(b.amount)}</span>
                 </div>
@@ -175,6 +175,7 @@ const Home: FC = () => {
           loading={expenseLoading}
           columns={transactionColumns}
           scroll={{ x: true }}
+          rowKey={(r) => r.id}
           dataSource={expense ?? []}
         />
       </section>

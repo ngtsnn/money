@@ -14,12 +14,15 @@ interface User {
 
 export const useUser = () => {
   const { data, error, isLoading } = useSWR("getUserInfo", async () => {
-    const user = await httpService.get<User>("/users/me");
-    return user;
+    try {
+      const user = await httpService.get<User>("/users/me");
+      return user;
+    } catch (error) {
+      return undefined
+    }
   }, {
     refreshInterval: 86400000,
   });
 
   return { user: data, error, isLoading };
-
 };
