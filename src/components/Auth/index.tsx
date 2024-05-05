@@ -1,18 +1,42 @@
 import React, { FC } from "react";
 import Container from "atoms/Container";
-import { Button } from "antd";
+import useNotification from "antd/es/notification/useNotification";
 import TelegramIcon from "assets/svg/Telegram";
+import TelegramLoginButton, { TelegramUser } from "telegram-login-button";
+import httpService from "services/http";
 import { useUser } from "hooks/useUser";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {}
 
+const BOT_NAME = import.meta.env.VITE_TELE_BOTNAME || "moneytizerrrr_bot";
 export const Auth: FC<IProps> = (props) => {
+
+  const { mutate } = useUser();
+  const navigate = useNavigate();
+
+  const [api] = useNotification();
+
+  const onTeleCallback = async (user: TelegramUser) => {
+    try {
+      await httpService.post("/oauth/tele", user);
+      api.success({
+        message: "Logged in",
+      })
+      await mutate();
+      navigate("/");
+    } catch (error) {
+      api.error({
+        message: "Fail to login via Telegram, try another method"
+      });
+    }
+  }
 
   return (
     <Container className="flex items-center gap-4 flex-wrap">
       <div className="flex-1">
         <img
-          className="max-h-60 md:w-full md:h-auto md:max-h-full block m-auto"
+          className="max-h-48 md:w-full md:h-auto md:max-h-full block m-auto"
           src="/img/banner.svg"
           alt=""
           width={300}
@@ -31,6 +55,15 @@ export const Auth: FC<IProps> = (props) => {
             <TelegramIcon size={32} />
           </a>
         </div>
+
+        <div className="h-3"></div>
+
+        <TelegramLoginButton
+          botName={BOT_NAME}
+          // dataAuthUrl={teleOauthCallbackURL}
+          className="w-fit m-auto"
+          dataOnauth={onTeleCallback}
+        />
       </div>
     </Container>
   );

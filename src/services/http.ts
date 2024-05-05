@@ -66,7 +66,10 @@ httpService.interceptors.response.use(
   (err) => {
     const originalConfig = err?.config;
 
-    if ((err?.response?.status === 401 || err?.response?.status === 403) && !originalConfig?.url?.includes('auth')) {
+    if (
+      (err?.response?.status === 401 || err?.response?.status === 403) &&
+      (!originalConfig?.url?.includes("auth") || !originalConfig?.url?.includes("oauth"))
+    ) {
       if (!refreshPromise) {
         refreshPromise = getRefreshToken().then((val) => {
           refreshPromise = null;

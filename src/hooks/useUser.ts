@@ -13,7 +13,7 @@ interface User {
 }
 
 export const useUser = () => {
-  const { data, error, isLoading } = useSWR("getUserInfo", async () => {
+  const { data, error, isLoading, mutate, } = useSWR("getUserInfo", async () => {
     try {
       const user = await httpService.get<User>("/users/me");
       return user;
@@ -24,5 +24,5 @@ export const useUser = () => {
     refreshInterval: 86400000,
   });
 
-  return { user: data, error, isLoading };
+  return { user: data, error, isLoading, mutate };
 };

@@ -2,6 +2,7 @@ import { FC, StrictMode, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import RootContainer from "Layout/Root";
 import ProtectedRoute from "Layout/Protected";
+import useNotification from "antd/es/notification/useNotification";
 
 const Home = lazy(() => import("pages/Home"));
 const AuthPage = lazy(() => import("pages/Auth/"));
@@ -9,8 +10,11 @@ const MagicAuth = lazy(() => import("pages/Auth/Magic"));
 
 const Router: FC = () => {
 
+  const [, contextHolder] = useNotification();
+
   return (
     <Suspense fallback={<></>}>
+      {contextHolder}
       <Routes>
         <Route path="/" element={<RootContainer />}>
           <Route index element={<Home />} />

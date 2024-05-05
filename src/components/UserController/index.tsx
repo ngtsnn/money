@@ -6,6 +6,8 @@ import { useUser } from "hooks/useUser";
 import React, { FC } from "react";
 import { ChevronDown, LogOut, User } from "react-feather";
 import { useNavigate } from "react-router-dom";
+import { mutate } from 'swr'
+import httpService from "services/http";
 
 const UserController: FC = () => {
   const { user, isLoading } = useUser();
@@ -28,7 +30,11 @@ const UserController: FC = () => {
       label: "Log out",
       key: "logout",
       icon: <LogOut size={20} />,
-      onClick: () => navigate("/profile"),
+      onClick: async () => {
+        await httpService.post('/auth/logout');
+        mutate(() => true)
+        navigate('/login')
+      },
     },
   ];
 
